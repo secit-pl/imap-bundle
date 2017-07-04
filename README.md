@@ -1,4 +1,4 @@
-# Route injector annotation
+# PHP-IMAP integration bundle
 
 Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 2.8 and 3.0+.
 
