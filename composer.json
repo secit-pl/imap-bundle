@@ -1,0 +1,23 @@
+{
+    "name": "secit-pl/imap-bundle",
+    "type": "symfony-bundle",
+    "description": "PHP-IMAP Symfony integration.",
+    "keywords": ["imap", "php-imap", "symfony", "bundle"],
+    "homepage": "http://secit.pl",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tomasz Gemza",
+            "email": "t.gemza@secit.pl"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "symfony/framework-bundle": "~2.8|~3.0",
+        "symfony/dependency-injection": "~2.8|~3.0",
+        "php-imap/php-imap": "~2.0"
+    },
+    "autoload": {
+        "psr-4": { "SecIT\\ImapBundle\\": "" }
+    }
+}
