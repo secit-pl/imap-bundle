@@ -65,3 +65,20 @@ From this point you can use any of the methods provided by the [php-imap](https:
 $exampleConnection = $this->get('secit.imap')->get('example_connection');
 $exampleConnection->getMailboxInfo();
 ```
+
+To quickly test the connection to the server you can use the `testConnection()` method
+
+```php
+// testing with a boolean response
+$isConnectable = $this->get('secit.imap')->testConnection('example_connection');
+var_dump($isConnectable);
+
+// testing with a full error message
+try {
+    $isConnectable = $this->get('secit.imap')->testConnection('example_connection', true)
+} catch (\Exception $exception) {
+    echo $exception->getMessage();
+}
+```
+
+Be aware that this will disconnect your current connection and create a new one on success. In most cases this is not a problem.
