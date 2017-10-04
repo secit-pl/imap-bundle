@@ -75,7 +75,7 @@ var_dump($isConnectable);
 
 // testing with a full error message
 try {
-    $isConnectable = $this->get('secit.imap')->testConnection('example_connection', true)
+    $isConnectable = $this->get('secit.imap')->testConnection('example_connection', true);
 } catch (\Exception $exception) {
     echo $exception->getMessage();
 }
