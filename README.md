@@ -1,18 +1,23 @@
 # PHP-IMAP integration bundle
 
-Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 2.8 and 3.0+.
+Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 2.8, 3.x and 4.x.
 
 
 
 ## Installation
 
+#### 1. Composer
 From the command line run
 
 ```
 $ composer require secit-pl/imap-bundle
 ```
 
-Update your AppKernel by adding the bundle declaration
+If you're using Symfony Flex you're done and you can go to the configuration section otherwise you must manually register this bundle.
+
+#### 2. Register bundle
+
+If you're not using Symfony Flex you must manually register this bundle in your AppKernel by adding the bundle declaration
 
 ```php
 class AppKernel extends Kernel
@@ -31,7 +36,10 @@ class AppKernel extends Kernel
 
 ## Configuration
 
-Setup your config.yml
+Setup your mailbox configuration. If your are using symfony 2.8 or 3.x without Symfony Flex add your configuration in `app/config/config.yml`.
+If you're using Symfony 4 or Symfony 3.x with Flex open the `config/packages/imap.yaml` and adjust its content.
+
+Here is the example configuration:
 
 ```yaml
 imap:
