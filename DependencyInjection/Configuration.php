@@ -24,7 +24,6 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('connections')
                     ->isRequired()
-                    ->cannotBeEmpty()
                     ->prototype('array')
                         ->children()
                             ->scalarNode('mailbox')
