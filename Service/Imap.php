@@ -90,6 +90,10 @@ class Imap
 
         $config = $this->connections[$name];
 
+        if (isset($config['attachments_dir'])) {
+            $this->checkAttachmentsDir($config['attachments_dir']);
+        }
+
         return new Mailbox(
             $config['mailbox'],
             $config['username'],
@@ -97,5 +101,32 @@ class Imap
             isset($config['attachments_dir']) ? $config['attachments_dir'] : null,
             isset($config['server_encoding']) ? $config['server_encoding'] : 'UTF-8'
         );
+    }
+
+    /**
+     * Check attachments directory.
+     *
+     * @param null|string $directoryPath
+     * @param bool        $createIfNotExists
+     *
+     * @throws \Exception
+     */
+    protected function checkAttachmentsDir($directoryPath, $createIfNotExists = true)
+    {
+        if (!$directoryPath) {
+            return;
+        }
+
+        if (file_exists($directoryPath)) {
+            if (!is_dir($directoryPath)) {
+                throw new \Exception(sprintf('File "%s" exists but it is not a directory', $directoryPath));
+            }
+
+            if (!is_readable($directoryPath) || !is_writable($directoryPath)) {
+                throw new \Exception(sprintf('Directory "%s" does not have expected access permissions', $directoryPath));
+            }
+        } elseif($createIfNotExists && !mkdir($directoryPath, 0770, true)) {
+            throw new \Exception(sprintf('Cannot create the attachments directory "%s"', $directoryPath));
+        }
     }
 }
