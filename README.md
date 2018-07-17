@@ -97,7 +97,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class IndexController extends Controller
 {
-    public function indexAction(Imap $imap)
+    public function indexAction()
     {
         $exampleConnection = $this->get('secit.imap')->get('example_connection');
         $anotherConnection = $this->get('secit.imap')->get('another_connection');
