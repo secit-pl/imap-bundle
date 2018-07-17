@@ -3,3 +3,7 @@ services:
         class: SecIT\ImapBundle\Service\Imap
         arguments: ["%secit.imap.connections%"]
         public: true
+
+    SecIT\ImapBundle\Service\Imap:
+        alias: secit.imap
+        public: true

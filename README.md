@@ -58,12 +58,56 @@ imap:
 ```
 
 ## Usage
-
+#### With autowiring
 In your controller:
 
 ```php
-$exampleConnection = $this->get('secit.imap')->get('example_connection');
-$anotherConnection = $this->get('secit.imap')->get('another_connection');
+<?php
+
+namespace App\Controller;
+
+use SecIT\ImapBundle\Service\Imap;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+class IndexController extends AbstractController
+{
+    public function indexAction(Imap $imap)
+    {
+        $exampleConnection = $imap->get('example_connection');
+        $anotherConnection = $imap->get('another_connection');
+
+        ...
+    }
+
+    ...
+}
+
+```
+
+#### With service container
+In your controller:
+
+```php
+<?php
+
+namespace App\Controller;
+
+use SecIT\ImapBundle\Service\Imap;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+class IndexController extends Controller
+{
+    public function indexAction(Imap $imap)
+    {
+        $exampleConnection = $this->get('secit.imap')->get('example_connection');
+        $anotherConnection = $this->get('secit.imap')->get('another_connection');
+
+        ...
+    }
+
+    ...
+}
+
 ```
 
 From this point you can use any of the methods provided by the [php-imap](https://github.com/barbushin/php-imap) library. For example
