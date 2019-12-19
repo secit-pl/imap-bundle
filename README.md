@@ -1,6 +1,6 @@
 # PHP-IMAP integration bundle
 
-Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 2.8, 3.x and 4.x.
+Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 2.8, 3.x, 4.x and 5.x.
 
 ## Want to support this bundle?
 
