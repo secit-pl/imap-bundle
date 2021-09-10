@@ -63,6 +63,17 @@ imap:
             server_encoding: "UTF-8"
 ```
 
+If you're using Symfony to connect to a Microsoft 365 business environment, there's a good chance you'll want to connect to a shared mailbox. In that case you need to specify the parameters ```authuser``` and ```user```. Where *shared_account* is the username without domain, like:
+
+```yaml
+imap:
+    connections:
+        example_connection:
+            mailbox: "{outlook.office365.com:993/imap/ssl/authuser=first.last@example.com/user=shared_account}Root/Folder"
+            username: "email@example.com"
+            password: "password"
+``` 
+
 ## Usage
 #### With autowiring
 In your controller:
