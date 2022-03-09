@@ -2,7 +2,7 @@
 
 Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 4.x, 5.x and 6.x.
 
-> **_NOTE:_**  The version 1.5 and above are only compatible with Symfony 4+. Previous versions support was dropped. If you'd like to use it with Symfony 2.8 or 3.x you should use the version 1.4 which was the last compatible with Symfony 2.8 and 3.x. 
+> The version 1.5 and above are only compatible with Symfony 4+. Previous versions support was dropped. If you'd like to use it with Symfony 2.8 or 3.x you should use the version 1.4 which was the last compatible with Symfony 2.8 and 3.x. 
 
 ## Want to support this bundle?
 
