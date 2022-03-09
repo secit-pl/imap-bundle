@@ -61,6 +61,15 @@ imap:
             password: "password"
             attachments_dir: "%kernel.project_dir%/var/imap/attachments"
             server_encoding: "UTF-8"
+
+        full_config_connection:
+            mailbox: "{localhost:143}INBOX"
+            username: "username"
+            password: "password"
+            attachments_dir: "%kernel.project_dir%/var/imap/attachments"
+            create_attachments_dir_if_not_exists: true # default true
+            created_attachments_dir_permissions: 777 # default 770
+            server_encoding: "UTF-8"
 ```
 
 If you're using Symfony to connect to a Microsoft 365 business environment, there's a good chance you'll want to connect to a shared mailbox. In that case you need to specify the parameters ```authuser``` and ```user```. Where *shared_account* is the username without domain, like:
