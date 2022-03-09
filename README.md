@@ -1,6 +1,6 @@
 # PHP-IMAP integration bundle
 
-Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 2.8, 3.x, 4.x, 5.x and 6.x.
+Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 4.x, 5.x and 6.x.
 
 ## Want to support this bundle?
 
@@ -59,7 +59,7 @@ imap:
             mailbox: "{localhost:143}INBOX"
             username: "username"
             password: "password"
-            attachments_dir: "%kernel.root_dir%/../var/imap/attachments"
+            attachments_dir: "%kernel.project_dir%/var/imap/attachments"
             server_encoding: "UTF-8"
 ```
 
