@@ -130,7 +130,7 @@ class Imap
             if (!is_readable($directoryPath) || !is_writable($directoryPath)) {
                 throw new \Exception(sprintf('Directory "%s" does not have enough access permissions', $directoryPath));
             }
-        } elseif($createIfNotExists) {
+        } elseif ($createIfNotExists) {
             $umask = umask(0);
             $created = mkdir($directoryPath, octdec($directoryPermissions), true);
             umask($umask);
