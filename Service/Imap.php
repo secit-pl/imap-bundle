@@ -132,7 +132,7 @@ class Imap
             }
         } elseif($createIfNotExists) {
             $umask = umask(0);
-            $created = mkdir($directoryPath, decoct($directoryPermissions), true);
+            $created = mkdir($directoryPath, octdec($directoryPermissions), true);
             umask($umask);
 
             if (!$created) {
