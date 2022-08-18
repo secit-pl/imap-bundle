@@ -25,27 +25,19 @@ If you're using Symfony Flex you're done and you can go to the configuration sec
 
 #### 2. Register bundle
 
-If you're not using Symfony Flex you must manually register this bundle in your AppKernel by adding the bundle declaration
+If you're not using Symfony Flex you must manually register this bundle in /config/bundles.php by adding the bundle declaration. 
 
 ```php
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = [
-            ...
-            new SecIT\ImapBundle\ImapBundle(),
-        ];
-
-        ...
-    }
-}
+return [
+  ...
+  new SecIT\ImapBundle\ImapBundle(),
+];
 ```
 
 ## Configuration
 
-Setup your mailbox configuration. If your are using symfony 2.8 or 3.x without Symfony Flex add your configuration in `app/config/config.yml`.
-If you're using Symfony 4 or Symfony 3.x with Flex open the `config/packages/imap.yaml` and adjust its content.
+Setup your mailbox configuration.
+If you're using Symfony 4 with Flex open the `config/packages/imap.yaml` and adjust its content.
 
 Here is the example configuration:
 
@@ -74,7 +66,9 @@ imap:
             server_encoding: "UTF-8"
 ```
 
-If you're using Symfony to connect to a Microsoft 365 business environment, there's a good chance you'll want to connect to a shared mailbox. In that case you need to specify the parameters ```authuser``` and ```user```. Where *shared_account* is the username without domain, like:
+If you're using Symfony to connect to a Microsoft 365 business environment, there's a good chance you'll want to connect to a shared mailbox. 
+In that case you need to specify the parameters ```authuser``` and ```user```. 
+Where *shared_account* is the username without domain, like:
 
 ```yaml
 imap:
