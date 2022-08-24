@@ -7,3 +7,10 @@ services:
     SecIT\ImapBundle\Service\Imap:
         alias: secit.imap
         public: true
+
+    SecIT\ImapBundle\Command\ValidateConnectionsCommand:
+        public: false
+        tags: [console.command]
+        arguments: 
+            - '@SecIT\ImapBundle\Service\Imap'
+            - '@parameter_bag'

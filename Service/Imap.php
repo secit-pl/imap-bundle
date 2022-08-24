@@ -17,7 +17,7 @@ class Imap
     /**
      * Imap constructor.
      *
-     * @param array $connections
+     * @param array<string, mixed> $connections
      */
     public function __construct(protected array $connections)
     {}

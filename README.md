@@ -77,7 +77,54 @@ imap:
             mailbox: "{outlook.office365.com:993/imap/ssl/authuser=first.last@example.com/user=shared_account}Root/Folder"
             username: "email@example.com"
             password: "password"
-``` 
+```
+
+### Security
+
+Do not set the sensitive Data like mailbox, username and password directly in the config-files. You may have to [encode the values](https://symfony.com/doc/current/doctrine.html#configuring-the-database).
+[Configuration Based on Environment Variables](https://symfony.com/doc/current/configuration.html#configuration-based-on-environment-variables)
+[Referencing Secrets in Configuration Files](https://symfony.com/doc/current/configuration/secrets.html#referencing-secrets-in-configuration-files)
+Better set them in ```.env.local```, use Symfony Secrets or CI-Secrets.
+
+```yaml
+imap:
+    connections:
+        example_connection:
+            mailbox:  '%env(EXAMPLE_CONNECTION_MAILBOX)%'
+            username: '%env(EXAMPLE_CONNECTION_USERNAME)%'
+            password: '%env(EXAMPLE_CONNECTION_PASSWORD)%'
+```
+
+### Dump actual config:
+
+```
+php bin/console debug:config imap
+```
+
+### Validate if the mailboxes can connect correct
+
+```
+php bin/console imap-bundle:validate
+```
+
+Result:
+```
++--------------------------+----------------+-------------------------------+--------------------+
+| Connection               | Connect Result | Mailbox                       | Username           |
++--------------------------+----------------+-------------------------------+--------------------+
+| example_connection       | SUCCESS        | {imap.strato.de:993/imap/ssl} | user@mail.com      |
+| example_WRONG_connection | FAILED         | {imap.strato.de:993/imap/ssl} | WRONG              |
++--------------------------+----------------+-------------------------------+--------------------+
+```
+
+This command can take some while if a connect failed. That is because of a long connection-timeout.
+If you use this in CI-Pipeline add the parameter `-q`.
+Password is not displayed for security reasons.
+You can set an array of connections to validate.
+
+```
+php bin/console imap-bundle:validate example_connection example_connection2
+```
 
 ## Usage
 #### With autowiring
@@ -106,7 +153,7 @@ class IndexController extends AbstractController
 
 ```
 
-#### With service container
+#### With service container (Only works in Symfony < 6)
 In your controller:
 
 ```php
@@ -136,7 +183,7 @@ From this point you can use any of the methods provided by the [php-imap](https:
 
 
 ```php
-$exampleConnection = $this->get('secit.imap')->get('example_connection');
+$exampleConnection = $imap->get('example_connection');
 $exampleConnection->getMailboxInfo();
 ```
 
@@ -144,12 +191,12 @@ To quickly test the connection to the server you can use the `testConnection()` 
 
 ```php
 // testing with a boolean response
-$isConnectable = $this->get('secit.imap')->testConnection('example_connection');
+$isConnectable = $imap->testConnection('example_connection');
 var_dump($isConnectable);
 
 // testing with a full error message
 try {
-    $isConnectable = $this->get('secit.imap')->testConnection('example_connection', true);
+    $isConnectable = $imap->testConnection('example_connection', true);
 } catch (\Exception $exception) {
     echo $exception->getMessage();
 }
