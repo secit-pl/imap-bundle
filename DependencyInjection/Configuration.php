@@ -27,9 +27,12 @@ class Configuration implements ConfigurationInterface
         }
 
         $rootNode
+	        ->fixXmlConfig('connection')
             ->children()
                 ->arrayNode('connections')
                     ->isRequired()
+                    ->requiresAtLeastOneElement()
+	                ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
                             ->scalarNode('mailbox')
