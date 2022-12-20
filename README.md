@@ -1,6 +1,8 @@
 # PHP-IMAP integration bundle
 
-Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 4.x, 5.x and 6.x.
+Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 4.4, 5.x and 6.x.
+
+> The version 2.0 and above require PHP 8.0+ and Symfony 4.4+. If you are stuck on previous PHP or Symfony version please use version 1.x.
 
 > The version 1.5 and above are only compatible with Symfony 4+. Previous versions support was dropped. If you'd like to use it with Symfony 2.8 or 3.x you should use the version 1.4 which was the last compatible with Symfony 2.8 and 3.x. 
 
@@ -36,8 +38,7 @@ return [
 
 ## Configuration
 
-Setup your mailbox configuration.
-If you're using Symfony 4 with Flex open the `config/packages/imap.yaml` and adjust its content.
+To set up your mailbox configuration open the `config/packages/imap.yaml` and adjust its content.
 
 Here is the example configuration:
 
@@ -109,15 +110,15 @@ php bin/console imap-bundle:validate
 
 Result:
 ```
-+--------------------------+----------------+-------------------------------+--------------------+
-| Connection               | Connect Result | Mailbox                       | Username           |
-+--------------------------+----------------+-------------------------------+--------------------+
-| example_connection       | SUCCESS        | {imap.strato.de:993/imap/ssl} | user@mail.com      |
-| example_WRONG_connection | FAILED         | {imap.strato.de:993/imap/ssl} | WRONG              |
-+--------------------------+----------------+-------------------------------+--------------------+
++--------------------------+-------------------+-------------------------------+--------------------+
+| Connection               | Connect Result    | Mailbox                       | Username           |
++--------------------------+-------------------+-------------------------------+--------------------+
+| example_connection       | SUCCESS           | {imap.strato.de:993/imap/ssl} | user@mail.com      |
+| example_WRONG_connection | FAILED: Reason... | {imap.strato.de:993/imap/ssl} | WRONG              |
++--------------------------+-------------------+-------------------------------+--------------------+
 ```
 
-This command can take some while if a connect failed. That is because of a long connection-timeout.
+This command can take some while if any connection failed. That is because of a long connection-timeout.
 If you use this in CI-Pipeline add the parameter `-q`.
 Password is not displayed for security reasons.
 You can set an array of connections to validate.
