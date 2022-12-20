@@ -25,9 +25,12 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
+	    ->fixXmlConfig('connection')
             ->children()
                 ->arrayNode('connections')
                     ->isRequired()
+                    ->requiresAtLeastOneElement()
+	            ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
                             ->scalarNode('mailbox')
