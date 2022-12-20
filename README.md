@@ -8,9 +8,9 @@ Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony
 
 ## Want to support this bundle?
 
-Consider buying our MacOS app which allows you to customize your MacOS menu bar. 
+Consider buying our macOS app which allows you to customize your macOS menu bar. 
 
-[Infinite Menu Bar](https://infinitemenubar.com/appstore/github-imap-bundle) allows you to add to your menu bar custom elements. Want to have current IP (local or external), Macbook battery state, Bitcoin price or even custom contet from any HTTP URL or API? No problem! This app can do this and many more!
+[Infinite Menu Bar](https://infinitemenubar.com/appstore/github-imap-bundle) allows you to add to your menu bar custom elements. Want to have current IP (local or external), Macbook battery state, Bitcoin price or even custom content from any HTTP URL or API? No problem! This app can do this and many more!
 
 [![Infinite Menu Bar](https://infinitemenubar.com/assets/icon-100.jpg)](https://infinitemenubar.com/appstore/github-imap-bundle)
 
