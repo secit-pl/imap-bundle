@@ -63,7 +63,7 @@ class ValidateConnectionsCommand extends Command
         } catch (ConnectionException $exception) {
             $this->failed = true;
 
-            $result = 'FAILED: '.$exception->getErrors();
+            $result = 'FAILED: '.$exception->getErrors('last');
         }
 
         return [
