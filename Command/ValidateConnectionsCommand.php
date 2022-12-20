@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SecIT\ImapBundle\Command;
 
+use PhpImap\Exceptions\ConnectionException;
 use SecIT\ImapBundle\Service\Imap;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -55,16 +56,21 @@ class ValidateConnectionsCommand extends Command
      */
     protected function getRow(string $key, array $connection): array
     {
-        $testResult = $this->imap->testConnection($key, false);
-        if (!$testResult) {
+        try {
+            $this->imap->testConnection($key, true);
+
+            $result = 'SUCCESS';
+        } catch (ConnectionException $exception) {
             $this->failed = true;
+
+            $result = 'FAILED: '.$exception->getErrors();
         }
 
         return [
-           $key,
-           ($testResult) ? 'SUCCESS' : 'FAILED',
-           $connection["mailbox"],
-           $connection["username"],
+            $key,
+            $result,
+            $connection['mailbox'],
+            $connection['username'],
         ];
     }
 

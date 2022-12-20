@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SecIT\ImapBundle\Service;
 
+use PhpImap\Exceptions\ConnectionException;
 use PhpImap\Mailbox;
 
 /**
@@ -46,13 +47,13 @@ class Imap
      *
      * @param bool $throwExceptions set to true if you'd like to get an exception on error instead of "return false"
      *
-     * @throws \Exception
+     * @throws ConnectionException
      */
     public function testConnection(string $name, bool $throwExceptions = false): bool
     {
         try {
             return $this->getMailbox($name)->getImapStream(true) !== null;
-        } catch (\Exception $exception) {
+        } catch (ConnectionException $exception) {
             if ($throwExceptions) {
                 throw $exception;
             }
