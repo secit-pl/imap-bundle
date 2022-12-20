@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SecIT\ImapBundle\Service;
 
 use PhpImap\Mailbox;
@@ -20,7 +22,8 @@ class Imap
      * @param array<string, mixed> $connections
      */
     public function __construct(protected array $connections)
-    {}
+    {
+    }
 
     /**
      * Get a connection to the specified mailbox.
@@ -111,7 +114,7 @@ class Imap
             }
         } elseif ($createIfNotExists) {
             $umask = umask(0);
-            $created = mkdir($directoryPath, octdec($directoryPermissions), true);
+            $created = mkdir($directoryPath, octdec(''.$directoryPermissions), true);
             umask($umask);
 
             if (!$created) {

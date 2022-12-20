@@ -1,4 +1,8 @@
-<?php /** @noinspection PhpPossiblePolymorphicInvocationInspection */
+<?php
+
+declare(strict_types=1);
+
+/** @noinspection PhpPossiblePolymorphicInvocationInspection */
 
 namespace SecIT\ImapBundle\DependencyInjection;
 

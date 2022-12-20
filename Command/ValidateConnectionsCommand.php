@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace SecIT\ImapBundle\Command;
 
 use SecIT\ImapBundle\Service\Imap;
@@ -17,23 +20,23 @@ use Symfony\Component\HttpFoundation\Response;
  * USE: php bin/console imap-bundle:validate-connections
  */
 # Symfony > 5.3
-##[AsCommand(name: 'imap-bundle:validate-connections', description: 'Validate if all Mailboxes can connect correct. If not, return 1')]
+##[AsCommand(name: 'imap-bundle:validate-connections', description: 'Validate if all Mailboxes can connect correct. If not, return 1.')]
 class ValidateConnectionsCommand extends Command
 {
     protected static $defaultName = 'imap-bundle:validate-connections';
-    protected static $defaultDescription = 'Validate if all Mailboxes can connect correct. If not, return 1';
+    protected static $defaultDescription = 'Validate if all Mailboxes can connect correct. If not, return 1.';
 
     protected ?InputInterface $input;
-	protected ?OutputInterface $output;
-	protected bool $failed = false;
+    protected ?OutputInterface $output;
+    protected bool $failed = false;
 
-	public function __construct(protected Imap $imap, protected ParameterBagInterface $parameter)
+    public function __construct(protected Imap $imap, protected ParameterBagInterface $parameter)
     {
-	    parent::__construct();
+        parent::__construct();
 
         $this->output = null;
-	    $this->input = null;
-	}
+        $this->input = null;
+    }
 
     /**
      * {@inheritdoc}
@@ -42,7 +45,7 @@ class ValidateConnectionsCommand extends Command
     {
         $this
             ->setDefinition([
-                new InputArgument('connections', InputArgument::IS_ARRAY, 'Connections. Will fail if not correct'),
+                new InputArgument('connections', InputArgument::IS_ARRAY, 'Connections. Will fail if not correct.'),
             ]);
     }
 
@@ -50,73 +53,63 @@ class ValidateConnectionsCommand extends Command
      * @return string[]
      * @throws \Exception
      */
-	protected function getRow(string $key, array $connection): array
+    protected function getRow(string $key, array $connection): array
     {
-        $connection_test = $this->imap->testConnection($key, false);
-        if(!$connection_test)
-        {$this->failed = true;}
+        $testResult = $this->imap->testConnection($key, false);
+        if (!$testResult) {
+            $this->failed = true;
+        }
 
-	    return [
+        return [
            $key,
-           ($connection_test) ? 'SUCCESS' : 'FAILED',
-	       $connection["mailbox"],
-	       $connection["username"],
+           ($testResult) ? 'SUCCESS' : 'FAILED',
+           $connection["mailbox"],
+           $connection["username"],
         ];
-	}
+    }
 
     protected function dumpToScreen(array $connections): void
     {
         $table = new Table($this->output);
         $table->setHeaders(['Connection', 'Connect Result', 'Mailbox', 'Username']);
 
-        foreach($connections as $key => $connection)
-        {
+        foreach ($connections as $key => $connection) {
             $table->addRow($this->getRow($key, $connection));
         }
 
         $table->render();
     }
 
-	protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-	    $this->input = $input;
-	    $this->output = $output;
+        $this->input = $input;
+        $this->output = $output;
         $allowedConnections = $input->getArgument('connections');
         $allAvailableConnections = $this->parameter->get('secit.imap.connections');
         $connections = [];
 
-        # Filter to the allowed connections if set
-        if($allowedConnections)
-        {
-            foreach($allowedConnections as $key => $connection)
-            {
-                if(array_key_exists($connection, $allAvailableConnections))
-                {
+        // Filter to the allowed connections if set
+        if ($allowedConnections) {
+            foreach ($allowedConnections as $connection) {
+                if (array_key_exists($connection, $allAvailableConnections)) {
                     $connections[$connection] = $allAvailableConnections[$connection];
-                }
-                else
-                {
-                    $this->output->writeln('One or more Connections given are not available');
+                } else {
+                    $this->output->writeln('One or more connections given are not available');
+
                     return 1;
                 }
             }
-        }
-        else
-        {
+        } else {
             $connections = $allAvailableConnections;
         }
 
-    	$this->dumpToScreen($connections);
-        $this->output->writeln('Total Connections: '.count($connections));
+        $this->dumpToScreen($connections);
+        $this->output->writeln('Total connections: '.count($connections));
 
-        if($this->failed)
-        {
-         return 1;
+        if ($this->failed) {
+            return 1;
         }
-        else
-        {
-         return 0;
-         #return Command::SUCCESS; # Symfony > 5
-        }
-	}
+
+        return 0;
+    }
 }

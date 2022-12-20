@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SecIT\ImapBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
