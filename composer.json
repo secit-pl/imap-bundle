@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "PHP-IMAP Symfony integration.",
     "keywords": ["imap", "php-imap", "symfony", "bundle"],
-    "homepage": "http://secit.pl",
+    "homepage": "https://secit.pl",
     "license": "MIT",
     "authors": [
         {
@@ -12,10 +12,10 @@
         }
     ],
     "require": {
-        "php": ">=7.1.3",
-        "symfony/framework-bundle": "~4.0|~5.0|~6.0",
-        "symfony/dependency-injection": "~4.0|~5.0|~6.0",
-        "php-imap/php-imap": "^2.0.4|~3.0|~4.0|~5.0"
+        "php": ">=8.0",
+        "symfony/framework-bundle": "~4.4|~5.0|~6.0",
+        "symfony/dependency-injection": "~4.4|~5.0|~6.0",
+        "php-imap/php-imap": "~4.2|~5.0"
     },
     "autoload": {
         "psr-4": { "SecIT\\ImapBundle\\": "" }

@@ -11,37 +11,25 @@ use PhpImap\Mailbox;
  */
 class Imap
 {
-    /**
-     * @var array
-     */
-    protected $connections;
-
-    /**
-     * @var array|Mailbox[]
-     */
-    protected $instances = [];
+    /** @var Mailbox[] $instances */
+    protected array $instances = [];
 
     /**
      * Imap constructor.
      *
-     * @param array $connections
+     * @param array<string, mixed> $connections
      */
-    public function __construct(array $connections)
-    {
-        $this->connections = $connections;
-    }
+    public function __construct(protected array $connections)
+    {}
 
     /**
      * Get a connection to the specified mailbox.
      *
-     * @param string $name
-     * @param bool   $flush force to create a new Mailbox instance
-     *
-     * @return Mailbox
+     * @param bool $flush force to create a new Mailbox instance
      *
      * @throws \Exception
      */
-    public function get($name, $flush = false)
+    public function get(string $name, bool $flush = false): Mailbox
     {
         if ($flush || !isset($this->instances[$name])) {
             $this->instances[$name] = $this->getMailbox($name);
@@ -53,14 +41,11 @@ class Imap
     /**
      * Test mailbox connection.
      *
-     * @param string $name
-     * @param bool   $throwExceptions set to true if you'd like to get an exception on error instead of "return false"
-     *
-     * @return bool
+     * @param bool $throwExceptions set to true if you'd like to get an exception on error instead of "return false"
      *
      * @throws \Exception
      */
-    public function testConnection($name, $throwExceptions = false)
+    public function testConnection(string $name, bool $throwExceptions = false): bool
     {
         try {
             return $this->getMailbox($name)->getImapStream(true) !== null;
@@ -76,16 +61,12 @@ class Imap
     /**
      * Get new mailbox instance.
      *
-     * @param string $name
-     *
-     * @return Mailbox
-     *
      * @throws \Exception
      */
-    protected function getMailbox($name)
+    protected function getMailbox(string $name): Mailbox
     {
         if (!isset($this->connections[$name])) {
-            throw new \Exception(sprintf('Imap connection %s is not configured.', $name));
+            throw new \RuntimeException(sprintf('Imap connection %s is not configured.', $name));
         }
 
         $config = $this->connections[$name];
@@ -110,13 +91,11 @@ class Imap
     /**
      * Check attachments directory.
      *
-     * @param null|string $directoryPath
-     * @param bool        $createIfNotExists
-     * @param int         $directoryPermissions In decimal format! 775 instead of 0775
+     * @param int $directoryPermissions In decimal format! 775 instead of 0775
      *
      * @throws \Exception
      */
-    protected function checkAttachmentsDir($directoryPath, $createIfNotExists, $directoryPermissions)
+    protected function checkAttachmentsDir(?string $directoryPath, bool $createIfNotExists, int $directoryPermissions): void
     {
         if (!$directoryPath) {
             return;
@@ -124,11 +103,11 @@ class Imap
 
         if (file_exists($directoryPath)) {
             if (!is_dir($directoryPath)) {
-                throw new \Exception(sprintf('File "%s" exists but it is not a directory', $directoryPath));
+                throw new \RuntimeException(sprintf('File "%s" exists but it is not a directory', $directoryPath));
             }
 
             if (!is_readable($directoryPath) || !is_writable($directoryPath)) {
-                throw new \Exception(sprintf('Directory "%s" does not have enough access permissions', $directoryPath));
+                throw new \RuntimeException(sprintf('Directory "%s" does not have enough access permissions', $directoryPath));
             }
         } elseif ($createIfNotExists) {
             $umask = umask(0);
@@ -136,7 +115,7 @@ class Imap
             umask($umask);
 
             if (!$created) {
-                throw new \Exception(sprintf('Cannot create the attachments directory "%s"', $directoryPath));
+                throw new \RuntimeException(sprintf('Cannot create the attachments directory "%s"', $directoryPath));
             }
         }
     }
