@@ -1,5 +1,5 @@
 {
-    "name": "secit-pl/imap-bundle",
+    "name": "ehymel/imap-bundle",
     "type": "symfony-bundle",
     "description": "PHP-IMAP Symfony integration.",
     "keywords": ["imap", "php-imap", "symfony", "bundle"],
