@@ -43,6 +43,19 @@ class Imap
     }
 
     /**
+     * Get a connection for all mailboxes.
+     *
+     * @param bool $flush force to create a new Mailbox instance
+     *
+     * @throws \Exception
+     */
+    public function getAll(): array
+    {
+        $this->instances = $this->getMailboxes();
+        return $this->instances;
+    }
+
+    /**
      * Test mailbox connection.
      *
      * @param bool $throwExceptions set to true if you'd like to get an exception on error instead of "return false"
@@ -90,6 +103,41 @@ class Imap
             $config['attachments_dir'],
             $config['server_encoding']
         );
+    }
+
+
+    /**
+     * Get new mailboxes instance.
+     *
+     * @throws \Exception
+     */
+    protected function getMailboxes(): array
+    {
+        if (!isset($this->connections)) {
+            throw new \RuntimeException(sprintf('Imap connections are not configured.'));
+        }
+
+        $config = $this->connections;
+        $mailboxes = array();
+
+        foreach ($config as $mailbox) {
+           if (isset($mailbox['attachments_dir'])) {
+                $this->checkAttachmentsDir(
+                    $mailbox['attachments_dir'],
+                    $mailbox['create_attachments_dir_if_not_exists'],
+                    $mailbox['created_attachments_dir_permissions']
+                );
+            }
+            $mailboxes[] = new Mailbox(
+                $mailbox['mailbox'],
+                $mailbox['username'],
+                $mailbox['password'],
+                $mailbox['attachments_dir'],
+                $mailbox['server_encoding']
+            );
+        }
+
+        return $mailboxes;
     }
 
     /**
