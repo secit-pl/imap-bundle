@@ -20,13 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * USE: php bin/console imap-bundle:validate-connections
  */
-# Symfony > 5.3
-##[AsCommand(name: 'imap-bundle:validate-connections', description: 'Validate if all Mailboxes can connect correct. If not, return 1.')]
+#[AsCommand(name: 'imap-bundle:validate-connections', description: 'Validate if all Mailboxes can connect correct. If not, return 1.')]
 class ValidateConnectionsCommand extends Command
 {
-    protected static $defaultName = 'imap-bundle:validate-connections';
-    protected static $defaultDescription = 'Validate if all Mailboxes can connect correct. If not, return 1.';
-
     protected ?InputInterface $input;
     protected ?OutputInterface $output;
     protected bool $failed = false;
@@ -116,6 +112,6 @@ class ValidateConnectionsCommand extends Command
             return 1;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }
