@@ -98,7 +98,7 @@ class ValidateConnectionsCommand extends Command
                 } else {
                     $this->output->writeln('One or more connections given are not available');
 
-                    return 1;
+                    return Command::FAILURE;
                 }
             }
         } else {
@@ -109,7 +109,7 @@ class ValidateConnectionsCommand extends Command
         $this->output->writeln('Total connections: '.count($connections));
 
         if ($this->failed) {
-            return 1;
+            return Command::FAILURE;
         }
 
         return Command::SUCCESS;
