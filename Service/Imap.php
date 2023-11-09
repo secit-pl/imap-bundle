@@ -46,6 +46,8 @@ class Imap
      * Get a connection for all mailboxes.
      *
      * @param bool $flush force to create a new Mailbox instance
+     * 
+     * @return Mailbox[]
      *
      * @throws \Exception
      */
@@ -108,6 +110,8 @@ class Imap
 
     /**
      * Get new mailboxes instance.
+     * 
+     * @return Mailbox[]
      *
      * @throws \Exception
      */
