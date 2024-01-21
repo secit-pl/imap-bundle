@@ -24,6 +24,9 @@ class Imap
      */
     public function __construct(protected array $connections)
     {
+        if (!extension_loaded('imap')) {
+            throw new \ErrorException('PHP imap extension not loaded.');
+        }
     }
 
     /**
