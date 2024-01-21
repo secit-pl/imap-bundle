@@ -46,6 +46,23 @@ class Imap
     }
 
     /**
+     * Get all connections.
+     *
+     * @return array<int, Mailbox>
+     *
+     * @throws \Exception
+     */
+    public function getAll(bool $flush = false): array
+    {
+        $mailboxes = [];
+        foreach (array_keys($this->connections) as $connectionName) {
+            $mailboxes[] = $this->get($connectionName, $flush);
+        }
+
+        return $mailboxes;
+    }
+
+    /**
      * Test mailbox connection.
      *
      * @param bool $throwExceptions set to true if you'd like to get an exception on error instead of "return false"
