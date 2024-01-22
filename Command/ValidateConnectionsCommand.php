@@ -100,11 +100,11 @@ class ValidateConnectionsCommand extends Command
         try {
             $connection->testConnection(true);
 
-            $result = 'SUCCESS';
+            $result = '<info>SUCCESS</info>';
         } catch (ConnectionException $exception) {
             $this->failed = true;
 
-            $result = 'FAILED: '.$exception->getErrors('last');
+            $result = sprintf('<error>FAILED: %s</error>', $exception->getErrors('last'));
         }
 
         return [
