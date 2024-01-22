@@ -1,10 +1,16 @@
 # PHP-IMAP integration bundle
 
-Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony 4.4, 5.x and 6.x.
+Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony.
 
-> The version 2.0 and above require PHP 8.0+ and Symfony 4.4+. If you are stuck on previous PHP or Symfony version please use version 1.x.
+## Compatibility matrix
 
-> The version 1.5 and above are only compatible with Symfony 4+. Previous versions support was dropped. If you'd like to use it with Symfony 2.8 or 3.x you should use the version 1.4 which was the last compatible with Symfony 2.8 and 3.x. 
+
+| Bundle version | Maintained | Symfony versions | Min. PHP version |
+|----------------|------------|------------------|------------------|
+| 3.x            | Yes        | 7.x              | 8.2.0            |
+| 2.0            | No         | 4.4 to 6.4       | 8.0.0            |
+| 1.5            | No         | 4.0 to 4.3       | 5.4.0            |
+| 1.4            | No         | 2.8 to 3.4       | 5.4.0            |
 
 ## Want to support this bundle?
 
@@ -23,18 +29,6 @@ From the command line run
 $ composer require secit-pl/imap-bundle
 ```
 
-If you're using Symfony Flex you're done and you can go to the configuration section otherwise you must manually register this bundle.
-
-#### 2. Register bundle
-
-If you're not using Symfony Flex you must manually register this bundle in /config/bundles.php by adding the bundle declaration. 
-
-```php
-return [
-  ...
-  new SecIT\ImapBundle\ImapBundle(),
-];
-```
 
 ## Configuration
 
@@ -82,7 +76,7 @@ imap:
 
 ### Security
 
-Do not set the sensitive Data like mailbox, username and password directly in the config-files. You may have to [encode the values](https://symfony.com/doc/current/doctrine.html#configuring-the-database).
+It's good practice to do not set the sensitive data like mailbox, username and password directly in the config-files. You may have to [encode the values](https://symfony.com/doc/current/doctrine.html#configuring-the-database).
 [Configuration Based on Environment Variables](https://symfony.com/doc/current/configuration.html#configuration-based-on-environment-variables)
 [Referencing Secrets in Configuration Files](https://symfony.com/doc/current/configuration/secrets.html#referencing-secrets-in-configuration-files)
 Better set them in ```.env.local```, use Symfony Secrets or CI-Secrets.
@@ -105,7 +99,7 @@ php bin/console debug:config imap
 ### Validate if the mailboxes can connect correct
 
 ```
-php bin/console imap-bundle:validate
+php bin/console secit:imap:validate-connections
 ```
 
 Result:
@@ -124,27 +118,46 @@ Password is not displayed for security reasons.
 You can set an array of connections to validate.
 
 ```
-php bin/console imap-bundle:validate example_connection example_connection2
+php bin/console secit:imap:validate-connections example_connection example_connection2
 ```
 
 ## Usage
-#### With autowiring
-In your controller:
+
+Let's say your config looks like this
+
+```yaml
+imap:
+    connections:
+        example:
+            mailbox: ...
+            
+        second:
+            mailbox: ...
+            
+        connection3:
+            mailbox: ...
+```
+
+You can get the connection inside a class by using service [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) and using camelCased connection name + Connection as parameter name.  
 
 ```php
 <?php
 
 namespace App\Controller;
 
-use SecIT\ImapBundle\Service\Imap;
+use SecIT\ImapBundle\ConnectionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IndexController extends AbstractController
 {
-    public function indexAction(Imap $imap)
-    {
-        $exampleConnection = $imap->get('example_connection');
-        $anotherConnection = $imap->get('another_connection');
+    public function index(
+        ConnectionInterface $exampleConnection,
+        ConnectionInterface $secondConnection,
+        ConnectionInterface $connection3Connection,
+    ) {
+        $phpImap = $exampleConnection->getConnection();
+        $isConnectable = $secondConnection->testConnection();
+        $connectionName = $connection3Connection->getName(); // connection3
 
         ...
     }
@@ -154,23 +167,59 @@ class IndexController extends AbstractController
 
 ```
 
-#### With service container (Only works in Symfony < 6)
-In your controller:
+Connections can also be injected thanks to their name and the [Target](https://symfony.com/doc/current/service_container/autowiring.html#dealing-with-multiple-implementations-of-the-same-type) attribute:
 
 ```php
 <?php
 
 namespace App\Controller;
 
-use SecIT\ImapBundle\Service\Imap;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use SecIT\ImapBundle\ConnectionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 
-class IndexController extends Controller
+class IndexController extends AbstractController
 {
-    public function indexAction()
-    {
-        $exampleConnection = $this->get('secit.imap')->get('example_connection');
-        $anotherConnection = $this->get('secit.imap')->get('another_connection');
+    public function index(
+        #[Target('exampleConnection')] 
+        ConnectionInterface $example,
+        #[Target('secondConnection')] 
+        ConnectionInterface $customName,
+        #[Target('connection3Connection')] 
+        ConnectionInterface $connection,
+    ) {
+        $phpImap = $exampleConnection->getConnection();
+        $isConnectable = $secondConnection->testConnection();
+        $connectionName = $connection3Connection->getName(); // connection3
+
+        ...
+    }
+
+    ...
+}
+
+```
+
+To get all connections you can use [TaggedIterator](https://symfony.com/doc/current/service_container/tags.html#reference-tagged-services)  
+
+```php
+<?php
+
+namespace App\Controller;
+
+use SecIT\ImapBundle\ConnectionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+
+class IndexController extends AbstractController
+{
+    public function index(
+        #[TaggedIterator('secit.imap.connection')]
+        iterable $connections,
+    ) {
+        foreach ($connections as $connection) {
+            $phpImap = $exampleConnection->getConnection();
+        }
 
         ...
     }
@@ -184,23 +233,67 @@ From this point you can use any of the methods provided by the [php-imap](https:
 
 
 ```php
-$exampleConnection = $imap->get('example_connection');
-$exampleConnection->getMailboxInfo();
+$phpImap = $exampleConnection->getConnection();
+$phpImap->getMailboxInfo();
 ```
 
 To quickly test the connection to the server you can use the `testConnection()` method
 
 ```php
 // testing with a boolean response
-$isConnectable = $imap->testConnection('example_connection');
+$isConnectable = $exampleConnection->testConnection();
 var_dump($isConnectable);
 
 // testing with a full error message
 try {
-    $isConnectable = $imap->testConnection('example_connection', true);
+    $isConnectable = $exampleConnection->testConnection(true);
 } catch (\Exception $exception) {
     echo $exception->getMessage();
 }
 ```
 
 Be aware that this will disconnect your current connection and create a new one on success. In most cases this is not a problem.
+
+## Migration guide
+
+If you are upgrading from version prior to 3.0.0 to 3.x+ you may find that there are some BC breaks.
+
+### Connections getting
+
+Previously to get the connection you had to inject the `SecIT\ImapBundle\Service\Imap` service and from it get all connections.
+
+```php
+public function index(Imap $imap)
+{
+    $exampleConnection = $imap->get('example_connection');
+}
+```
+
+After migration, you should use [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) to inject dynamically created services for each connection
+
+```php
+
+use SecIT\ImapBundle\ConnectionInterface;
+
+public function index(ConnectionInterface $exampleConnection)
+{
+}
+```
+
+or use [Target](https://symfony.com/doc/current/service_container/autowiring.html#dealing-with-multiple-implementations-of-the-same-type) attribute
+
+```php
+
+use SecIT\ImapBundle\ConnectionInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
+
+public function index(
+    #[Target('exampleConnection')] 
+    ConnectionInterface $customName,
+) {
+}
+```
+
+### Console command
+
+The command changes its name from `imap-bundle:validate` to `secit:imap:validate-connections`.

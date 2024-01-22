@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace SecIT\ImapBundle\Command;
 
 use PhpImap\Exceptions\ConnectionException;
-use SecIT\ImapBundle\Service\Imap;
+use SecIT\ImapBundle\Connection\ConnectionInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -13,51 +13,92 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- *
- * USE: php bin/console imap-bundle:validate-connections
- */
-# Symfony > 5.3
-##[AsCommand(name: 'imap-bundle:validate-connections', description: 'Validate if all Mailboxes can connect correct. If not, return 1.')]
+#[AsCommand(
+    name: 'secit:imap:validate-connections',
+    description: 'Validate if all Mailboxes can connect correct. If not, return 1.',
+)]
 class ValidateConnectionsCommand extends Command
 {
-    protected static $defaultName = 'imap-bundle:validate-connections';
-    protected static $defaultDescription = 'Validate if all Mailboxes can connect correct. If not, return 1.';
+    private ?InputInterface $input = null;
+    private ?OutputInterface $output = null;
+    private bool $failed = false;
+    private array $connections = [];
 
-    protected ?InputInterface $input;
-    protected ?OutputInterface $output;
-    protected bool $failed = false;
-
-    public function __construct(protected Imap $imap, protected ParameterBagInterface $parameter)
-    {
+    public function __construct(
+        #[TaggedIterator('secit.imap.connection')]
+        iterable $connections
+    ) {
         parent::__construct();
 
-        $this->output = null;
-        $this->input = null;
+        foreach ($connections as $connection) {
+            $this->connections[$connection->getName()] = $connection;
+        }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
-        $this
-            ->setDefinition([
-                new InputArgument('connections', InputArgument::IS_ARRAY, 'Connections. Will fail if not correct.'),
-            ]);
+        $this->setDefinition([
+            new InputArgument('connections', InputArgument::IS_ARRAY, 'Connections. Will fail if not correct.'),
+        ]);
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        $this->input = $input;
+        $this->output = $output;
+        $allowedConnections = $input->getArgument('connections');
+
+        $connections = [];
+
+        // Filter to the allowed connections if set
+        if ($allowedConnections) {
+            foreach ($allowedConnections as $connection) {
+                if (array_key_exists($connection, $this->connections)) {
+                    $connections[$connection] = $this->connections[$connection];
+                } else {
+                    $this->output->writeln('One or more connections given are not available');
+
+                    return self::FAILURE;
+                }
+            }
+        } else {
+            $connections = $this->connections;
+        }
+
+        $this->dumpToScreen($connections);
+        $this->output->writeln('Total connections: '.count($connections));
+
+        if ($this->failed) {
+            return self::FAILURE;
+        }
+
+        return self::SUCCESS;
+    }
+
+    private function dumpToScreen(array $connections): void
+    {
+        $table = new Table($this->output);
+        $table->setHeaders(['Connection', 'Connect Result', 'Mailbox', 'Username']);
+
+        foreach ($connections as $connection) {
+            $table->addRow($this->getRow($connection));
+        }
+
+        $table->render();
     }
 
     /**
      * @return string[]
      * @throws \Exception
      */
-    protected function getRow(string $key, array $connection): array
+    private function getRow(ConnectionInterface $connection): array
     {
         try {
-            $this->imap->testConnection($key, true);
+            $connection->testConnection(true);
 
             $result = 'SUCCESS';
         } catch (ConnectionException $exception) {
@@ -67,55 +108,10 @@ class ValidateConnectionsCommand extends Command
         }
 
         return [
-            $key,
+            $connection->getName(),
             $result,
             $connection['mailbox'],
             $connection['username'],
         ];
-    }
-
-    protected function dumpToScreen(array $connections): void
-    {
-        $table = new Table($this->output);
-        $table->setHeaders(['Connection', 'Connect Result', 'Mailbox', 'Username']);
-
-        foreach ($connections as $key => $connection) {
-            $table->addRow($this->getRow($key, $connection));
-        }
-
-        $table->render();
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $this->input = $input;
-        $this->output = $output;
-        $allowedConnections = $input->getArgument('connections');
-        $allAvailableConnections = $this->parameter->get('secit.imap.connections');
-        $connections = [];
-
-        // Filter to the allowed connections if set
-        if ($allowedConnections) {
-            foreach ($allowedConnections as $connection) {
-                if (array_key_exists($connection, $allAvailableConnections)) {
-                    $connections[$connection] = $allAvailableConnections[$connection];
-                } else {
-                    $this->output->writeln('One or more connections given are not available');
-
-                    return 1;
-                }
-            }
-        } else {
-            $connections = $allAvailableConnections;
-        }
-
-        $this->dumpToScreen($connections);
-        $this->output->writeln('Total connections: '.count($connections));
-
-        if ($this->failed) {
-            return 1;
-        }
-
-        return 0;
     }
 }

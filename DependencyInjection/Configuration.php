@@ -10,8 +10,6 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Class Configuration.
- *
  * @author Tomasz Gemza
  */
 class Configuration implements ConfigurationInterface
@@ -30,7 +28,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('connections')
                     ->isRequired()
                     ->requiresAtLeastOneElement()
-	            ->useAttributeAsKey('name')
+	                ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
                             ->scalarNode('mailbox')
