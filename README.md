@@ -104,12 +104,12 @@ php bin/console secit:imap:validate-connections
 
 Result:
 ```
-+--------------------------+-------------------+-------------------------------+--------------------+
-| Connection               | Connect Result    | Mailbox                       | Username           |
-+--------------------------+-------------------+-------------------------------+--------------------+
-| example_connection       | SUCCESS           | {imap.strato.de:993/imap/ssl} | user@mail.com      |
-| example_WRONG_connection | FAILED: Reason... | {imap.strato.de:993/imap/ssl} | WRONG              |
-+--------------------------+-------------------+-------------------------------+--------------------+
++--------------------------+-------------------+---------------------------------+--------------------+
+| Connection               | Connect Result    | Mailbox                         | Username           |
++--------------------------+-------------------+---------------------------------+--------------------+
+| example_connection       | SUCCESS           | {imap.example.com:993/imap/ssl} | user@mail.com      |
+| example_WRONG_connection | FAILED: Reason... | {imap.example.com:993/imap/ssl} | WRONG              |
++--------------------------+-------------------+---------------------------------+--------------------+
 ```
 
 This command can take some while if any connection failed. That is because of a long connection-timeout.
