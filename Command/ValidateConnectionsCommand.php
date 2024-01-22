@@ -110,8 +110,8 @@ class ValidateConnectionsCommand extends Command
         return [
             $connection->getName(),
             $result,
-            $connection['mailbox'],
-            $connection['username'],
+            $connection->getMailbox(),
+            $connection->getUsername(),
         ];
     }
 }
