@@ -138,7 +138,7 @@ imap:
             mailbox: ...
 ```
 
-You can get the connection inside a class by using service [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) and using camelCased connection name + Connection as parameter name.  
+You can get the connection inside a class by using service [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) and using camelCased connection name + `Connection` as parameter name.  
 
 ```php
 <?php
@@ -256,11 +256,11 @@ Be aware that this will disconnect your current connection and create a new one 
 
 ## Migration guide
 
-If you are upgrading from version prior to 3.0.0 to 3.x+ you may find that there are some BC breaks.
+Version 3.0.0 introduces some BC breaks.
 
 ### Connections getting
 
-Previously to get the connection you had to inject the `SecIT\ImapBundle\Service\Imap` service and from it get all connections.
+Previously to get the connection, you had to inject the `SecIT\ImapBundle\Service\Imap` service and get a connection from it.
 
 ```php
 public function index(Imap $imap)
@@ -273,7 +273,7 @@ After migration, you should use [autowiring](https://symfony.com/doc/current/ser
 
 ```php
 
-use SecIT\ImapBundle\ConnectionInterface;
+use SecIT\ImapBundle\Connection\ConnectionInterface;
 
 public function index(ConnectionInterface $exampleConnection)
 {
