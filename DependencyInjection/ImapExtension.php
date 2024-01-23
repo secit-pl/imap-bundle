@@ -33,7 +33,7 @@ class ImapExtension extends Extension
             $definition = new Definition(Connection::class);
             $definition->setPublic(false);
             $definition->addArgument($connectionName);
-            $definition->addArgument($options['mailbox']);
+            $definition->addArgument($options['imap_path']);
             $definition->addArgument($options['username']);
             $definition->addArgument($options['password']);
             $definition->addArgument($options['server_encoding']);

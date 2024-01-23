@@ -7,11 +7,11 @@ use PhpImap\Mailbox;
 
 class Connection implements ConnectionInterface
 {
-    private ?Mailbox $phpImapMailbox = null;
+    private ?Mailbox $mailbox = null;
     
     public function __construct(
         private readonly string $name,
-        private readonly string $mailbox,
+        private readonly string $imapPath,
         private readonly string $username,
         #[\SensitiveParameter]
         private readonly string $password,
@@ -30,9 +30,9 @@ class Connection implements ConnectionInterface
         return $this->name;
     }
 
-    public function getMailbox(): string
+    public function getImapPath(): string
     {
-        return $this->mailbox;
+        return $this->imapPath;
     }
 
     public function getUsername(): string
@@ -65,9 +65,9 @@ class Connection implements ConnectionInterface
         return $this->createdAttachmentsDirPermissions;
     }
 
-    public function getConnection(): Mailbox
+    public function getMailbox(): Mailbox
     {
-        if (null === $this->phpImapMailbox) {
+        if (null === $this->mailbox) {
             if (null !== $this->attachmentsDir) {
                 $this->checkAttachmentsDir(
                     $this->attachmentsDir,
@@ -76,8 +76,8 @@ class Connection implements ConnectionInterface
                 );
             }
 
-            $this->phpImapMailbox = new Mailbox(
-                $this->mailbox,
+            $this->mailbox = new Mailbox(
+                $this->imapPath,
                 $this->username,
                 $this->password,
                 $this->attachmentsDir,
@@ -85,13 +85,13 @@ class Connection implements ConnectionInterface
             );
         }
 
-        return $this->phpImapMailbox;
+        return $this->mailbox;
     }
     
     public function testConnection(bool $throwExceptions = false): bool
     {
         try {
-            return $this->getConnection()->getImapStream(true) !== null;
+            return $this->getMailbox()->getImapStream(true) !== null;
         } catch (ConnectionException $exception) {
             if ($throwExceptions) {
                 throw $exception;

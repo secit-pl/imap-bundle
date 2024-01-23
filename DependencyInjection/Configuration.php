@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
 	                ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('mailbox')
+                            ->scalarNode('imap_path')
                                 ->isRequired()
                                 ->cannotBeEmpty()
                             ->end()

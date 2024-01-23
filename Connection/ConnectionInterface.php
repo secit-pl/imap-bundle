@@ -8,7 +8,7 @@ use PhpImap\Mailbox;
 interface ConnectionInterface
 {
     public function getName(): string;
-    public function getMailbox(): string;
+    public function getImapPath(): string;
     public function getUsername(): string;
     public function getPassword(): string;
     public function getServerEncoding(): string;
@@ -19,7 +19,7 @@ interface ConnectionInterface
     /**
      * @throws \Exception
      */
-    public function getConnection(): Mailbox;
+    public function getMailbox(): Mailbox;
     
     /**
      * @param bool $throwExceptions set to true if you'd like to get an exception on error instead of "return false"

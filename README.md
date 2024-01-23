@@ -40,19 +40,19 @@ Here is the example configuration:
 imap:
     connections:
         example_connection:
-            mailbox: "{localhost:993/imap/ssl/novalidate-cert}INBOX"
+            imap_path: "{localhost:993/imap/ssl/novalidate-cert}INBOX"
             username: "email@example.com"
             password: "password"
 
         another_connection:
-            mailbox: "{localhost:143}INBOX"
+            imap_path: "{localhost:143}INBOX"
             username: "username"
             password: "password"
             attachments_dir: "%kernel.project_dir%/var/imap/attachments"
             server_encoding: "UTF-8"
 
         full_config_connection:
-            mailbox: "{localhost:143}INBOX"
+            imap_path: "{localhost:143}INBOX"
             username: "username"
             password: "password"
             attachments_dir: "%kernel.project_dir%/var/imap/attachments"
@@ -69,7 +69,7 @@ Where *shared_account* is the username without domain, like:
 imap:
     connections:
         example_connection:
-            mailbox: "{outlook.office365.com:993/imap/ssl/authuser=first.last@example.com/user=shared_account}Root/Folder"
+            imap_path: "{outlook.office365.com:993/imap/ssl/authuser=first.last@example.com/user=shared_account}Root/Folder"
             username: "email@example.com"
             password: "password"
 ```
@@ -85,7 +85,7 @@ Better set them in ```.env.local```, use Symfony Secrets or CI-Secrets.
 imap:
     connections:
         example_connection:
-            mailbox:  '%env(EXAMPLE_CONNECTION_MAILBOX)%'
+            imap_path:  '%env(EXAMPLE_CONNECTION_MAILBOX)%'
             username: '%env(EXAMPLE_CONNECTION_USERNAME)%'
             password: '%env(EXAMPLE_CONNECTION_PASSWORD)%'
 ```
@@ -129,13 +129,13 @@ Let's say your config looks like this
 imap:
     connections:
         example:
-            mailbox: ...
+            imap_path: ...
             
         second:
-            mailbox: ...
+            imap_path: ...
             
         connection3:
-            mailbox: ...
+            imap_path: ...
 ```
 
 You can get the connection inside a class by using service [autowiring](https://symfony.com/doc/current/service_container/autowiring.html) and using camelCased connection name + `Connection` as parameter name.  
@@ -155,7 +155,7 @@ class IndexController extends AbstractController
         ConnectionInterface $secondConnection,
         ConnectionInterface $connection3Connection,
     ) {
-        $phpImap = $exampleConnection->getConnection();
+        $mailbox = $exampleConnection->getMailbox(); // instance of PhpImap\Mailbox
         $isConnectable = $secondConnection->testConnection();
         $connectionName = $connection3Connection->getName(); // connection3
 
@@ -188,7 +188,7 @@ class IndexController extends AbstractController
         #[Target('connection3Connection')] 
         ConnectionInterface $connection,
     ) {
-        $phpImap = $exampleConnection->getConnection();
+        $mailbox = $exampleConnection->getMailbox(); // instance of PhpImap\Mailbox
         $isConnectable = $secondConnection->testConnection();
         $connectionName = $connection3Connection->getName(); // connection3
 
@@ -218,7 +218,7 @@ class IndexController extends AbstractController
         iterable $connections,
     ) {
         foreach ($connections as $connection) {
-            $phpImap = $exampleConnection->getConnection();
+            $mailbox = $exampleConnection->getMailbox();
         }
 
         ...
@@ -233,8 +233,8 @@ From this point you can use any of the methods provided by the [php-imap](https:
 
 
 ```php
-$phpImap = $exampleConnection->getConnection();
-$phpImap->getMailboxInfo();
+$mailbox = $exampleConnection->getMailbox();
+$mailbox->getMailboxInfo();
 ```
 
 To quickly test the connection to the server you can use the `testConnection()` method
@@ -258,6 +258,33 @@ Be aware that this will disconnect your current connection and create a new one 
 
 Version 3.0.0 introduces some BC breaks.
 
+### Configuration
+
+To better match [PhpImap\Mailbox](https://github.com/barbushin/php-imap/blob/master/src/PhpImap/Mailbox.php) constructor arguments the `mailbox` configuration parameter was renamed to `imap_path`.
+
+Previous version:
+
+```yaml
+imap:
+    connections:
+        example_connection:
+            mailbox: ...
+            username: ...
+            password: ...
+```
+
+Current version:
+
+
+```yaml
+imap:
+    connections:
+        example_connection:
+            imap_path: ...
+            username: ...
+            password: ...
+```
+
 ### Connections getting
 
 Previously to get the connection, you had to inject the `SecIT\ImapBundle\Service\Imap` service and get a connection from it.
@@ -265,7 +292,7 @@ Previously to get the connection, you had to inject the `SecIT\ImapBundle\Servic
 ```php
 public function index(Imap $imap)
 {
-    $exampleConnection = $imap->get('example_connection');
+    $mailbox = $imap->get('example_connection')->getConnection();
 }
 ```
 
@@ -277,6 +304,7 @@ use SecIT\ImapBundle\Connection\ConnectionInterface;
 
 public function index(ConnectionInterface $exampleConnection)
 {
+    $mailbox = $exampleConnection->getMailbox();
 }
 ```
 
@@ -291,6 +319,7 @@ public function index(
     #[Target('exampleConnection')] 
     ConnectionInterface $customName,
 ) {
+    $mailbox = $customName->getMailbox();
 }
 ```
 
