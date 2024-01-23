@@ -39,19 +39,19 @@ Here is the example configuration:
 ```yaml
 imap:
     connections:
-        example_connection:
+        example:
             imap_path: "{localhost:993/imap/ssl/novalidate-cert}INBOX"
             username: "email@example.com"
             password: "password"
 
-        another_connection:
+        another:
             imap_path: "{localhost:143}INBOX"
             username: "username"
             password: "password"
             attachments_dir: "%kernel.project_dir%/var/imap/attachments"
             server_encoding: "UTF-8"
 
-        full_config_connection:
+        fullConfig:
             imap_path: "{localhost:143}INBOX"
             username: "username"
             password: "password"
@@ -68,7 +68,7 @@ Where *shared_account* is the username without domain, like:
 ```yaml
 imap:
     connections:
-        example_connection:
+        example:
             imap_path: "{outlook.office365.com:993/imap/ssl/authuser=first.last@example.com/user=shared_account}Root/Folder"
             username: "email@example.com"
             password: "password"
@@ -84,7 +84,7 @@ Better set them in ```.env.local```, use Symfony Secrets or CI-Secrets.
 ```yaml
 imap:
     connections:
-        example_connection:
+        example:
             imap_path:  '%env(EXAMPLE_CONNECTION_MAILBOX)%'
             username: '%env(EXAMPLE_CONNECTION_USERNAME)%'
             password: '%env(EXAMPLE_CONNECTION_PASSWORD)%'
@@ -104,12 +104,12 @@ php bin/console secit:imap:validate-connections
 
 Result:
 ```
-+--------------------------+-------------------+---------------------------------+--------------------+
-| Connection               | Connect Result    | Mailbox                         | Username           |
-+--------------------------+-------------------+---------------------------------+--------------------+
-| example_connection       | SUCCESS           | {imap.example.com:993/imap/ssl} | user@mail.com      |
-| example_WRONG_connection | FAILED: Reason... | {imap.example.com:993/imap/ssl} | WRONG              |
-+--------------------------+-------------------+---------------------------------+--------------------+
++--------------+-------------------+---------------------------------+--------------------+
+| Connection   | Connect Result    | Mailbox                         | Username           |
++--------------+-------------------+---------------------------------+--------------------+
+| example      | SUCCESS           | {imap.example.com:993/imap/ssl} | user@mail.com      |
+| wrongExample | FAILED: Reason... | {imap.example.com:993/imap/ssl} | WRONG              |
++--------------+-------------------+---------------------------------+--------------------+
 ```
 
 This command can take some while if any connection failed. That is because of a long connection-timeout.
@@ -118,7 +118,7 @@ Password is not displayed for security reasons.
 You can set an array of connections to validate.
 
 ```
-php bin/console secit:imap:validate-connections example_connection example_connection2
+php bin/console secit:imap:validate-connections example example2
 ```
 
 ## Usage
@@ -158,13 +158,8 @@ class IndexController extends AbstractController
         $mailbox = $exampleConnection->getMailbox(); // instance of PhpImap\Mailbox
         $isConnectable = $secondConnection->testConnection();
         $connectionName = $connection3Connection->getName(); // connection3
-
-        ...
     }
-
-    ...
 }
-
 ```
 
 Connections can also be injected thanks to their name and the [Target](https://symfony.com/doc/current/service_container/autowiring.html#dealing-with-multiple-implementations-of-the-same-type) attribute:
@@ -191,13 +186,8 @@ class IndexController extends AbstractController
         $mailbox = $exampleConnection->getMailbox(); // instance of PhpImap\Mailbox
         $isConnectable = $secondConnection->testConnection();
         $connectionName = $connection3Connection->getName(); // connection3
-
-        ...
     }
-
-    ...
 }
-
 ```
 
 To get all connections you can use [TaggedIterator](https://symfony.com/doc/current/service_container/tags.html#reference-tagged-services)  
@@ -220,13 +210,8 @@ class IndexController extends AbstractController
         foreach ($connections as $connection) {
             $mailbox = $exampleConnection->getMailbox();
         }
-
-        ...
     }
-
-    ...
 }
-
 ```
 
 From this point you can use any of the methods provided by the [php-imap](https://github.com/barbushin/php-imap) library. For example
@@ -325,4 +310,4 @@ public function index(
 
 ### Console command
 
-The command changes its name from `imap-bundle:validate` to `secit:imap:validate-connections`.
+The command changed its name from `imap-bundle:validate` to `secit:imap:validate-connections`.
