@@ -218,7 +218,7 @@ class IndexController extends AbstractController
         iterable $connections,
     ) {
         foreach ($connections as $connection) {
-            $mailbox = $exampleConnection->getMailbox();
+            $mailbox = $connection->getMailbox();
         }
 
         ...
