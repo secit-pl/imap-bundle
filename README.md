@@ -7,7 +7,7 @@ Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony
 
 | Bundle version | Maintained | Symfony versions | Min. PHP version |
 |----------------|------------|------------------|------------------|
-| 3.x            | Yes        | 7.x              | 8.2.0            |
+| 3.x            | Yes        | 6.4 to 7.x       | 8.1.0            |
 | 2.1            | No         | 4.4 to 6.4       | 8.0.0            |
 | 1.5            | No         | 4.0 to 4.3       | 5.4.0            |
 | 1.4            | No         | 2.8 to 3.4       | 5.4.0            |
