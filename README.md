@@ -39,19 +39,19 @@ Here is the example configuration:
 ```yaml
 imap:
     connections:
-        example_connection:
+        example:
             imap_path: "{localhost:993/imap/ssl/novalidate-cert}INBOX"
             username: "email@example.com"
             password: "password"
 
-        another_connection:
+        another:
             imap_path: "{localhost:143}INBOX"
             username: "username"
             password: "password"
             attachments_dir: "%kernel.project_dir%/var/imap/attachments"
             server_encoding: "UTF-8"
 
-        full_config_connection:
+        full_config:
             imap_path: "{localhost:143}INBOX"
             username: "username"
             password: "password"
@@ -68,7 +68,7 @@ Where *shared_account* is the username without domain, like:
 ```yaml
 imap:
     connections:
-        example_connection:
+        example:
             imap_path: "{outlook.office365.com:993/imap/ssl/authuser=first.last@example.com/user=shared_account}Root/Folder"
             username: "email@example.com"
             password: "password"
@@ -84,7 +84,7 @@ Better set them in ```.env.local```, use Symfony Secrets or CI-Secrets.
 ```yaml
 imap:
     connections:
-        example_connection:
+        example:
             imap_path:  '%env(EXAMPLE_CONNECTION_MAILBOX)%'
             username: '%env(EXAMPLE_CONNECTION_USERNAME)%'
             password: '%env(EXAMPLE_CONNECTION_PASSWORD)%'
@@ -104,12 +104,12 @@ php bin/console secit:imap:validate-connections
 
 Result:
 ```
-+--------------------------+-------------------+---------------------------------+--------------------+
-| Connection               | Connect Result    | Mailbox                         | Username           |
-+--------------------------+-------------------+---------------------------------+--------------------+
-| example_connection       | SUCCESS           | {imap.example.com:993/imap/ssl} | user@mail.com      |
-| example_WRONG_connection | FAILED: Reason... | {imap.example.com:993/imap/ssl} | WRONG              |
-+--------------------------+-------------------+---------------------------------+--------------------+
++---------------+-------------------+---------------------------------+--------------------+
+| Connection    | Connect Result    | Mailbox                         | Username           |
++---------------+-------------------+---------------------------------+--------------------+
+| example       | SUCCESS           | {imap.example.com:993/imap/ssl} | user@mail.com      |
+| example_WRONG | FAILED: Reason... | {imap.example.com:993/imap/ssl} | WRONG              |
++---------------+-------------------+---------------------------------+--------------------+
 ```
 
 This command can take some while if any connection failed. That is because of a long connection-timeout.
@@ -118,7 +118,7 @@ Password is not displayed for security reasons.
 You can set an array of connections to validate.
 
 ```
-php bin/console secit:imap:validate-connections example_connection example_connection2
+php bin/console secit:imap:validate-connections example example2
 ```
 
 ## Usage
@@ -279,7 +279,7 @@ Current version:
 ```yaml
 imap:
     connections:
-        example_connection:
+        example:
             imap_path: ...
             username: ...
             password: ...
