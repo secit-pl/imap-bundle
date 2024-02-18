@@ -98,7 +98,7 @@ class ValidateConnectionsCommand extends Command
     private function getRow(ConnectionInterface $connection): array
     {
         try {
-            $connection->testConnection(true);
+            $connection->tryTestConnection();
 
             $result = '<info>SUCCESS</info>';
         } catch (ConnectionException $exception) {

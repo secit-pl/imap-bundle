@@ -94,11 +94,23 @@ class Connection implements ConnectionInterface
             return $this->getMailbox()->getImapStream(true) !== null;
         } catch (ConnectionException $exception) {
             if ($throwExceptions) {
+                trigger_deprecation(
+                    'secit-pl/imap-bundle',
+                    '3.1',
+                    'Setting the "%s()" method $throwExceptions argument to true is deprecated. The argument will be removed in imap-bundle 4.0. Use tryTestConnection() instead.',
+                    __METHOD__,
+                );
+
                 throw $exception;
             }
         }
 
         return false;
+    }
+
+    public function tryTestConnection(): void
+    {
+        $this->getMailbox()->getImapStream(true);
     }
 
     /**
