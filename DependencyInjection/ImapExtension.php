@@ -26,7 +26,6 @@ class ImapExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $connections = [];
         foreach ($config['connections'] as $connectionName => $options) {
             $serviceName = sprintf('secit.imap.connection.%s', $connectionName);
 
