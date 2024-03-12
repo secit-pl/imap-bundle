@@ -25,8 +25,8 @@ Consider buying our macOS app which allows you to customize your macOS menu bar.
 #### 1. Composer
 From the command line run
 
-```
-$ composer require secit-pl/imap-bundle
+```bash
+composer require secit-pl/imap-bundle
 ```
 
 
@@ -92,13 +92,13 @@ imap:
 
 ### Dump actual config:
 
-```
+```bash
 php bin/console debug:config imap
 ```
 
 ### Validate if the mailboxes can connect correct
 
-```
+```bash
 php bin/console secit:imap:validate-connections
 ```
 
