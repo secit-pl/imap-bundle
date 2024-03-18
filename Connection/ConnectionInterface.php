@@ -8,6 +8,7 @@ use PhpImap\Mailbox;
 interface ConnectionInterface
 {
     public function getName(): string;
+    public function isActive(): bool;
     public function getImapPath(): string;
     public function getUsername(): string;
     public function getPassword(): string;

@@ -11,6 +11,7 @@ class Connection implements ConnectionInterface
     
     public function __construct(
         private readonly string $name,
+        private readonly bool $isActive,
         private readonly string $imapPath,
         private readonly string $username,
         #[\SensitiveParameter]
@@ -28,6 +29,11 @@ class Connection implements ConnectionInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
     }
 
     public function getImapPath(): string
@@ -77,6 +83,7 @@ class Connection implements ConnectionInterface
             }
 
             $this->mailbox = new Mailbox(
+                $this->isActive,
                 $this->imapPath,
                 $this->username,
                 $this->password,

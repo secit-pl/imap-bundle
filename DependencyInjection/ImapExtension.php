@@ -32,6 +32,7 @@ class ImapExtension extends Extension
             $definition = new Definition(Connection::class);
             $definition->setPublic(false);
             $definition->addArgument($connectionName);
+            $definition->addArgument($options['is_active']);
             $definition->addArgument($options['imap_path']);
             $definition->addArgument($options['username']);
             $definition->addArgument($options['password']);
