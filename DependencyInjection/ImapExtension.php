@@ -32,7 +32,6 @@ class ImapExtension extends Extension
             $definition = new Definition(Connection::class);
             $definition->setPublic(false);
             $definition->addArgument($connectionName);
-            $definition->addArgument($options['is_active']);
             $definition->addArgument($options['imap_path']);
             $definition->addArgument($options['username']);
             $definition->addArgument($options['password']);
@@ -40,6 +39,7 @@ class ImapExtension extends Extension
             $definition->addArgument($options['attachments_dir']);
             $definition->addArgument($options['create_attachments_dir_if_not_exists']);
             $definition->addArgument($options['created_attachments_dir_permissions']);
+            $definition->addArgument($options['enabled']);
             $definition->addTag('secit.imap.connection');
 
             $container->setDefinition($serviceName, $definition);

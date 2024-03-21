@@ -8,7 +8,6 @@ use PhpImap\Mailbox;
 interface ConnectionInterface
 {
     public function getName(): string;
-    public function isActive(): bool;
     public function getImapPath(): string;
     public function getUsername(): string;
     public function getPassword(): string;
@@ -16,6 +15,7 @@ interface ConnectionInterface
     public function getAttachmentsDir(): ?string;
     public function isCreateAttachmentsDirIfNotExists(): bool;
     public function getCreatedAttachmentsDirPermissions(): int;
+    public function isEnabled(): bool;
 
     /**
      * @throws \Exception

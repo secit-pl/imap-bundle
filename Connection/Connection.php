@@ -11,7 +11,6 @@ class Connection implements ConnectionInterface
     
     public function __construct(
         private readonly string $name,
-        private readonly bool $isActive,
         private readonly string $imapPath,
         private readonly string $username,
         #[\SensitiveParameter]
@@ -20,6 +19,7 @@ class Connection implements ConnectionInterface
         private readonly ?string $attachmentsDir = null,
         private readonly bool $createAttachmentsDirIfNotExists = true,
         private readonly int $createdAttachmentsDirPermissions = 770,
+        private readonly bool $enabled = true,
     ) {
         if (!extension_loaded('imap')) {
             throw new \ErrorException('PHP imap extension not loaded.');
@@ -29,11 +29,6 @@ class Connection implements ConnectionInterface
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function isActive(): bool
-    {
-        return $this->isActive;
     }
 
     public function getImapPath(): string
@@ -71,6 +66,11 @@ class Connection implements ConnectionInterface
         return $this->createdAttachmentsDirPermissions;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
     public function getMailbox(): Mailbox
     {
         if (null === $this->mailbox) {
@@ -83,12 +83,12 @@ class Connection implements ConnectionInterface
             }
 
             $this->mailbox = new Mailbox(
-                $this->isActive,
                 $this->imapPath,
                 $this->username,
                 $this->password,
                 $this->attachmentsDir,
                 $this->serverEncoding,
+                $this->enabled,
             );
         }
 
@@ -97,6 +97,9 @@ class Connection implements ConnectionInterface
     
     public function testConnection(bool $throwExceptions = false): bool
     {
+        if(!$this->isEnabled()) {
+            throw new ConnectionException(array('Mailbox is not enabled'));
+        }
         try {
             return $this->getMailbox()->getImapStream(true) !== null;
         } catch (ConnectionException $exception) {
@@ -117,6 +120,9 @@ class Connection implements ConnectionInterface
 
     public function tryTestConnection(): void
     {
+        if(!$this->isEnabled()) {
+            throw new ConnectionException(array('Mailbox is not enabled'));
+        }
         $this->getMailbox()->getImapStream(true);
     }
 
