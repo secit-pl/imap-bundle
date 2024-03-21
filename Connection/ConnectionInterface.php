@@ -15,6 +15,7 @@ interface ConnectionInterface
     public function getAttachmentsDir(): ?string;
     public function isCreateAttachmentsDirIfNotExists(): bool;
     public function getCreatedAttachmentsDirPermissions(): int;
+    public function isEnabled(): bool;
 
     /**
      * @throws \Exception

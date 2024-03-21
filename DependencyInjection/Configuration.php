@@ -55,6 +55,8 @@ class Configuration implements ConfigurationInterface
                                 ->cannotBeEmpty()
                                 ->defaultValue('UTF-8')
                             ->end()
+                            ->scalarNode('enabled')
+                            ->end()
                         ->end()
                     ->end()
                 ->end()

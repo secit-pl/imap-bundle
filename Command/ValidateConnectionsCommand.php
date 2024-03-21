@@ -82,7 +82,7 @@ class ValidateConnectionsCommand extends Command
     private function dumpToScreen(array $connections): void
     {
         $table = new Table($this->output);
-        $table->setHeaders(['Connection', 'Connect Result', 'Mailbox', 'Username']);
+        $table->setHeaders(['Connection', 'Connect Result', 'Mailbox', 'Username', 'Enabled']);
 
         foreach ($connections as $connection) {
             $table->addRow($this->getRow($connection));
@@ -107,11 +107,19 @@ class ValidateConnectionsCommand extends Command
             $result = sprintf('<error>FAILED: %s</error>', $exception->getErrors('last'));
         }
 
+        if($connection->isEnabled())
+        {
+            $enabled = "<info>YES</info>";
+        } else {
+            $enabled = "<error>NO</error>";
+        }
+
         return [
             $connection->getName(),
             $result,
             $connection->getImapPath(),
             $connection->getUsername(),
+            $enabled,
         ];
     }
 }
