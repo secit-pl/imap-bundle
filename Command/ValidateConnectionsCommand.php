@@ -97,14 +97,18 @@ class ValidateConnectionsCommand extends Command
      */
     private function getRow(ConnectionInterface $connection): array
     {
-        try {
-            $connection->tryTestConnection();
+        if ($connection->isEnabled()) {
+            try {
+                $connection->tryTestConnection();
 
-            $result = '<info>SUCCESS</info>';
-        } catch (ConnectionException $exception) {
-            $this->failed = true;
+                $result = '<info>SUCCESS</info>';
+            } catch (ConnectionException $exception) {
+                $this->failed = true;
 
-            $result = sprintf('<error>FAILED: %s</error>', $exception->getErrors('last'));
+                $result = sprintf('<error>FAILED: %s</error>', $exception->getErrors('last'));
+            }
+        } else {
+            $result = '<error>DISABLED</error>';
         }
 
         if ($connection->isEnabled()) {
