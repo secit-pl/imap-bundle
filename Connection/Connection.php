@@ -74,9 +74,9 @@ class Connection implements ConnectionInterface
     public function getMailbox(): Mailbox
     {
         if (!$this->isEnabled()) {
-            throw new \ErrorException('Mailbox is not enabled');
+            throw new ConnectionException(['Mailbox is not enabled']);
         }
-        
+
         if (null === $this->mailbox) {
             if (null !== $this->attachmentsDir) {
                 $this->checkAttachmentsDir(
