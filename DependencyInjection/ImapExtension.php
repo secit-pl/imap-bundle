@@ -39,6 +39,7 @@ class ImapExtension extends Extension
             $definition->addArgument($options['attachments_dir']);
             $definition->addArgument($options['create_attachments_dir_if_not_exists']);
             $definition->addArgument($options['created_attachments_dir_permissions']);
+            $definition->addArgument($options['enabled']);
             $definition->addTag('secit.imap.connection');
 
             $container->setDefinition($serviceName, $definition);

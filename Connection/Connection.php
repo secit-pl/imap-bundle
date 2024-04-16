@@ -19,6 +19,7 @@ class Connection implements ConnectionInterface
         private readonly ?string $attachmentsDir = null,
         private readonly bool $createAttachmentsDirIfNotExists = true,
         private readonly int $createdAttachmentsDirPermissions = 770,
+        private readonly bool $enabled = true,
     ) {
         if (!extension_loaded('imap')) {
             throw new \ErrorException('PHP imap extension not loaded.');
@@ -65,8 +66,17 @@ class Connection implements ConnectionInterface
         return $this->createdAttachmentsDirPermissions;
     }
 
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
     public function getMailbox(): Mailbox
     {
+        if (!$this->isEnabled()) {
+            throw new ConnectionException(['Mailbox is not enabled']);
+        }
+
         if (null === $this->mailbox) {
             if (null !== $this->attachmentsDir) {
                 $this->checkAttachmentsDir(
@@ -90,6 +100,10 @@ class Connection implements ConnectionInterface
     
     public function testConnection(bool $throwExceptions = false): bool
     {
+        if (!$this->isEnabled()) {
+            return false;
+        }
+
         try {
             return $this->getMailbox()->getImapStream(true) !== null;
         } catch (ConnectionException $exception) {
@@ -110,6 +124,10 @@ class Connection implements ConnectionInterface
 
     public function tryTestConnection(): void
     {
+        if (!$this->isEnabled()) {
+            throw new \ErrorException('Mailbox is not enabled');
+        }
+
         $this->getMailbox()->getImapStream(true);
     }
 

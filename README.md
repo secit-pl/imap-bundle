@@ -59,6 +59,7 @@ imap:
             create_attachments_dir_if_not_exists: true # default true
             created_attachments_dir_permissions: 777 # default 770
             server_encoding: "UTF-8"
+            enabled: true
 ```
 
 If you're using Symfony to connect to a Microsoft 365 business environment, there's a good chance you'll want to connect to a shared mailbox. 
@@ -104,12 +105,13 @@ php bin/console secit:imap:validate-connections
 
 Result:
 ```
-+---------------+-------------------+---------------------------------+--------------------+
-| Connection    | Connect Result    | Mailbox                         | Username           |
-+---------------+-------------------+---------------------------------+--------------------+
-| example       | SUCCESS           | {imap.example.com:993/imap/ssl} | user@mail.com      |
-| example_WRONG | FAILED: Reason... | {imap.example.com:993/imap/ssl} | WRONG              |
-+---------------+-------------------+---------------------------------+--------------------+
++------------------+---------------------+---------------------------------+--------------------+---------+
+| Connection       | Connect Result      | Mailbox                         | Username           | Enabled |
++------------------+---------------------+---------------------------------+--------------------+---------+
+| example          | SUCCESS             | {imap.example.com:993/imap/ssl} | user@mail.com      | YES     |
+| example_WRONG    | FAILED: Reason..... | {imap.example.com:993/imap/ssl} | WRONG              | YES     |
+| example_DISABLED | FAILED: not enabled | {imap.example.com:993/imap/ssl} | user2@mail.com     | NO      |
++------------------+---------------------+---------------------------------+--------------------+---------+
 ```
 
 This command can take some while if any connection failed. That is because of a long connection-timeout.
