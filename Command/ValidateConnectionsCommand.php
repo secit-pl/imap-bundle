@@ -107,11 +107,10 @@ class ValidateConnectionsCommand extends Command
             $result = sprintf('<error>FAILED: %s</error>', $exception->getErrors('last'));
         }
 
-        if($connection->isEnabled())
-        {
-            $enabled = "<info>YES</info>";
+        if ($connection->isEnabled()) {
+            $enabled = '<info>YES</info>';
         } else {
-            $enabled = "<error>NO</error>";
+            $enabled = '<error>NO</error>';
         }
 
         return [

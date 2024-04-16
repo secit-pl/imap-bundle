@@ -88,7 +88,6 @@ class Connection implements ConnectionInterface
                 $this->password,
                 $this->attachmentsDir,
                 $this->serverEncoding,
-                $this->enabled,
             );
         }
 
@@ -97,9 +96,10 @@ class Connection implements ConnectionInterface
     
     public function testConnection(bool $throwExceptions = false): bool
     {
-        if(!$this->isEnabled()) {
-            throw new ConnectionException(array('Mailbox is not enabled'));
+        if (!$this->isEnabled()) {
+            return false;
         }
+
         try {
             return $this->getMailbox()->getImapStream(true) !== null;
         } catch (ConnectionException $exception) {
@@ -120,9 +120,10 @@ class Connection implements ConnectionInterface
 
     public function tryTestConnection(): void
     {
-        if(!$this->isEnabled()) {
-            throw new ConnectionException(array('Mailbox is not enabled'));
+        if (!$this->isEnabled()) {
+            throw new \ErrorException('Mailbox is not enabled');
         }
+
         $this->getMailbox()->getImapStream(true);
     }
 

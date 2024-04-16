@@ -56,6 +56,7 @@ class Configuration implements ConfigurationInterface
                                 ->defaultValue('UTF-8')
                             ->end()
                             ->scalarNode('enabled')
+                                ->defaultTrue()
                             ->end()
                         ->end()
                     ->end()
