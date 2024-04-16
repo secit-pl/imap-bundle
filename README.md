@@ -110,7 +110,7 @@ Result:
 +------------------+---------------------+---------------------------------+--------------------+---------+
 | example          | SUCCESS             | {imap.example.com:993/imap/ssl} | user@mail.com      | YES     |
 | example_WRONG    | FAILED: Reason..... | {imap.example.com:993/imap/ssl} | WRONG              | YES     |
-| example_DISABLED | FAILED: not enabled | {imap.example.com:993/imap/ssl} | user2@mail.com     | NO      |
+| example_DISABLED | DISABLED            | {imap.example.com:993/imap/ssl} | user2@mail.com     | NO      |
 +------------------+---------------------+---------------------------------+--------------------+---------+
 ```
 
