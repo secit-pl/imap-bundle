@@ -74,7 +74,7 @@ class Connection implements ConnectionInterface
     public function getMailbox(): Mailbox
     {
         if (!$this->isEnabled()) {
-            throw new ConnectionException(['Mailbox is not enabled']);
+            throw new ConnectionException(['Mailbox is not enabled.']);
         }
 
         if (null === $this->mailbox) {
@@ -125,7 +125,7 @@ class Connection implements ConnectionInterface
     public function tryTestConnection(): void
     {
         if (!$this->isEnabled()) {
-            throw new \ErrorException('Mailbox is not enabled');
+            throw new \ErrorException('Mailbox is not enabled.');
         }
 
         $this->getMailbox()->getImapStream(true);
@@ -146,11 +146,11 @@ class Connection implements ConnectionInterface
 
         if (file_exists($directoryPath)) {
             if (!is_dir($directoryPath)) {
-                throw new \RuntimeException(sprintf('File "%s" exists but it is not a directory', $directoryPath));
+                throw new \RuntimeException(sprintf('File "%s" exists but it is not a directory.', $directoryPath));
             }
 
             if (!is_readable($directoryPath) || !is_writable($directoryPath)) {
-                throw new \RuntimeException(sprintf('Directory "%s" does not have enough access permissions', $directoryPath));
+                throw new \RuntimeException(sprintf('Directory "%s" does not have enough access permissions.', $directoryPath));
             }
         } elseif ($createIfNotExists) {
             $umask = umask(0);
@@ -158,7 +158,7 @@ class Connection implements ConnectionInterface
             umask($umask);
 
             if (!$created) {
-                throw new \RuntimeException(sprintf('Cannot create the attachments directory "%s"', $directoryPath));
+                throw new \RuntimeException(sprintf('Cannot create the attachments directory "%s".', $directoryPath));
             }
         }
     }

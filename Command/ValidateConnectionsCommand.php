@@ -60,7 +60,7 @@ class ValidateConnectionsCommand extends Command
                 if (array_key_exists($connection, $this->connections)) {
                     $connections[$connection] = $this->connections[$connection];
                 } else {
-                    $this->output->writeln('One or more connections given are not available');
+                    $this->output->writeln('One or more connections given are not available.');
 
                     return self::FAILURE;
                 }
