@@ -202,7 +202,7 @@ class IndexController extends AbstractController
 
 ```
 
-To get all connections you can use [TaggedIterator](https://symfony.com/doc/current/service_container/tags.html#reference-tagged-services)  
+To get all connections you can use [AutowireIterator](https://symfony.com/doc/current/service_container/tags.html#reference-tagged-services)  
 
 ```php
 <?php
@@ -211,12 +211,12 @@ namespace App\Controller;
 
 use SecIT\ImapBundle\ConnectionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 class IndexController extends AbstractController
 {
     public function index(
-        #[TaggedIterator('secit.imap.connection')]
+        #[AutowireIterator('secit.imap.connection')]
         iterable $connections,
     ) {
         foreach ($connections as $connection) {
