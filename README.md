@@ -14,11 +14,11 @@ Simple [php-imap](https://github.com/barbushin/php-imap) integration for Symfony
 
 ## Want to support this bundle?
 
-Consider buying our macOS app which allows you to customize your macOS menu bar. 
+Consider using our [random code generator](https://codito.io/) service at [codito.io](https://codito.io/). 
 
-[Infinite Menu Bar](https://infinitemenubar.com/appstore/github-imap-bundle) allows you to add to your menu bar custom elements. Want to have current IP (local or external), Macbook battery state, Bitcoin price or even custom content from any HTTP URL or API? No problem! This app can do this and many more!
+With [codito.io](https://codito.io/) you can generate up to 250,000 codes in the format of your choice for free. You can use the generated codes for purposes such as promotional codes (which you can, for example, print on the inside of packaging), serial numbers, one-time or multi-use passwords, lottery coupons, discount codes, vouchers, random strings and much more - for more use cases see our [examples](https://codito.io/free-random-code-generator/examples). If 250,000 codes are not enough for you, you can use our [commercial code generation service](https://codito.io/commercial-code-generator/).
 
-[![Infinite Menu Bar](https://infinitemenubar.com/assets/icon-100.jpg)](https://infinitemenubar.com/appstore/github-imap-bundle)
+[![Random Code Generator](https://codito.io/build/favicons/logo.e56f7fb1.webp)](https://codito.io/)
 
 ## Installation
 
