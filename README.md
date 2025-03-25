@@ -147,7 +147,7 @@ You can get the connection inside a class by using service [autowiring](https://
 
 namespace App\Controller;
 
-use SecIT\ImapBundle\ConnectionInterface;
+use SecIT\ImapBundle\Connection\ConnectionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IndexController extends AbstractController
@@ -176,7 +176,7 @@ Connections can also be injected thanks to their name and the [Target](https://s
 
 namespace App\Controller;
 
-use SecIT\ImapBundle\ConnectionInterface;
+use SecIT\ImapBundle\Connection\ConnectionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 
@@ -209,7 +209,7 @@ To get all connections you can use [AutowireIterator](https://symfony.com/doc/cu
 
 namespace App\Controller;
 
-use SecIT\ImapBundle\ConnectionInterface;
+use SecIT\ImapBundle\Connection\ConnectionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
@@ -314,7 +314,7 @@ or use [Target](https://symfony.com/doc/current/service_container/autowiring.htm
 
 ```php
 
-use SecIT\ImapBundle\ConnectionInterface;
+use SecIT\ImapBundle\Connection\ConnectionInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 
 public function index(
